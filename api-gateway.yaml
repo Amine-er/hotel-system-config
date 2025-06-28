@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        # User Service
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/api/users/**
+
+        # Room Service
+        - id: room-service
+          uri: lb://ROOM-SERVICE
+          predicates:
+            - Path=/api/rooms/**
+
+        # Booking Service
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/bookings/**
+
+        # Payment Service
+        - id: payment-service-mock
+          uri: lb://PAYMENT-SERVICE-MOCK
+          predicates:
+            - Path=/api/payments/**
+
+    loadbalancer:
+          enabled: true
+
+logging:
+  level:
+    org.springframework.cloud.sleuth: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+server:
+  port: 8080
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
