@@ -19,6 +19,12 @@ spring:
           uri: lb://ROOM-SERVICE
           predicates:
             - Path=/api/rooms/**
+            
+        # Review Service
+        - id: review-service
+          uri: lb://REVIEW-SERVICE
+          predicates:
+            - Path=/api/reviews/**
 
         # Booking Service
         - id: booking-service
